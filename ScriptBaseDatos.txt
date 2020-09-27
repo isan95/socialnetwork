@@ -1,0 +1,49 @@
+CREATE SEQUENCE  id_user_app_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE SEQUENCE id_post_app_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE SEQUENCE  id_comment_app_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+create table user_app(
+id_user_app  integer NOT NULL  DEFAULT nextval('id_user_app_seq'::regclass ), 
+name character varying(45) NOT NULL,
+last_name character varying(60) NOT NULL,
+ndoc character varying(20) NOT NULL,
+password character varying(200) NOT NULL,
+CONSTRAINT user_app_pkey PRIMARY KEY (id_user_app) 
+);
+
+create table post_app(
+id_post_app integer NOT NULL DEFAULT nextval('id_post_app_seq'::regclass) ,
+content TEXT NOT NULL,
+post_app_date timestamp with time zone DEFAULT now(),
+id_user_app_post_app integer,
+CONSTRAINT post_app_pkey PRIMARY KEY (id_post_app),
+CONSTRAINT fk_post_app_user_app FOREIGN KEY (id_user_app_post_app) REFERENCES user_app (id_user_app) ON DELETE SET NULL ON UPDATE CASCADE 
+);
+
+create table comment_app(
+id_comment_app integer NOT NULL DEFAULT nextval('id_comment_app_seq'::regclass),
+content TEXT NOT NULL,
+id_post_app_comment_app integer NOT NULL,
+id_user_app_comment_app integer, 
+comment_app_date timestamp with time zone DEFAULT now(),
+CONSTRAINT id_comment_app_pkey PRIMARY KEY (id_comment_app),
+CONSTRAINT fk_id_user_app_comment_app FOREIGN KEY (id_user_app_comment_app) REFERENCES user_app(id_user_app) ON DELETE SET NULL ON UPDATE CASCADE,
+CONSTRAINT fk_comment_app_id_post_app FOREIGN KEY(id_post_app_comment_app) REFERENCES post_app (id_post_app) ON DELETE CASCADE ON UPDATE CASCADE
+);
